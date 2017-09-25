@@ -70,7 +70,7 @@ class UnionFindWithQuickFind implements UnionFind {
 
 
 class UnionFindWithQuickUnion {
-    
+
 
 }
 
