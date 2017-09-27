@@ -4,13 +4,6 @@ import java.util.Arrays;
 
 public class MergeSort {
 
-
-
-    public static void sortBottomUp(Comparable[] unsorted) {
-
-    }
-
-
     public static void sortTopDown(Comparable[] unsorted) {
 
         if(unsorted == null || unsorted.length <= 1) return;
