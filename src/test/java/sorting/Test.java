@@ -6,11 +6,11 @@ package sorting;
 public class Test {
     public static void main(String[] args) {
 
-        Integer[] unsorted = new Integer[]{6,5,4,1,3,2,0,9,8,10,7};
+        Integer[] unsorted = new Integer[]{6,5,4,1,3,2,0,9,8,10,7,11, 7, 7, 7};
 
 
 
-        ShellSort.sort(unsorted);
+        QuickSort.sort(unsorted);
 
 
 
