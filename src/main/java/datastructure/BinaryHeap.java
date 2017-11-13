@@ -6,6 +6,8 @@ package datastructure;
  * The first index in heap is 1, and if node is k, its child node is 2k and 2k + 1
  *
  * */
+
+
 public class BinaryHeap <Key extends Comparable<Key>>{
 
     private Key[] arr;
