@@ -6,8 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class InsertionSortTest extends SortingTestBase {
-
+public class HeapSortTest extends SortingTestBase {
   @BeforeClass
   private void setup() {
     sorted = new Integer[]{1, 2, 3, 4, 5};
@@ -20,7 +19,7 @@ public class InsertionSortTest extends SortingTestBase {
 
   @Test
   public void givenUnsortedArray_whenCallSort_shouldBeSorted() {
-    InsertionSort.sort(unsorted);
+    HeapSort.sort(unsorted);
     assertArrayEquals(unsorted, sorted);
   }
 }
