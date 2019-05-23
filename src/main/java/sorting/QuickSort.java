@@ -31,7 +31,7 @@ public class QuickSort {
     int left = start, right = end + 1;
 
     while (true) {
-      while (arr[++left].compareTo(pivot) < 0 && left <= end);
+      while (arr[++left].compareTo(pivot) < 0 && left < end);
       while (arr[--right].compareTo(pivot) > 0 && right > start);
 
       if (left >= right) {
