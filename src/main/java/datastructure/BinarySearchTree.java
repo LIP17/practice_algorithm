@@ -5,163 +5,162 @@ package datastructure;
  */
 public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
-    private class Node {
-        private Key key;
-        private Value value;
-        private Node left, right;
-        private int sizeOfSubtree;
+  private class Node {
 
-        Node(Key key, Value value, int sizeOfSubtree) {
-            this.key = key;
-            this.value = value;
-            this.sizeOfSubtree = sizeOfSubtree;
-        }
+    private Key key;
+    private Value value;
+    private Node left, right;
+
+    Node(Key key, Value value) {
+      this.key = key;
+      this.value = value;
+    }
+  }
+
+  private Node root;
+
+  public void put(Key key, Value value) {
+    this.root = put(root, key, value);
+  }
+
+  public Node put(Node node, Key key, Value value) {
+    if(node == null) {
+      return new Node(key, value);
     }
 
-    private Node root;
+    int compare = node.key.compareTo(key);
 
-    public int size() { return size(root); }
+    if(compare == 0) node.value = value;
+    else if(compare < 0) node.right = put(node.right, key, value);
+    else if(compare > 0) node.left = put(node.left, key, value);
 
-    private int size(Node node) {
-        if (node == null) return 0;
-        else return size(node.left) + size(node.right) + 1;
+    return node;
+  }
+
+
+  public Value get(Key key) {
+    return get(root, key);
+  }
+
+  private Value get(Node node, Key key) {
+    if (node == null) {
+      return null;
     }
 
-    public Value get(Key key) { return get(root, key); }
+    int compare = node.key.compareTo(key);
+    if (compare == 0) {
+      return node.value;
+    } else if (compare < 0) {
+      return get(node.right, key);
+    } else {
+      return get(node.left, key);
+    }
+  }
 
-    private Value get(Node node, Key key) {
-        if(node == null || key == null) return null;
+  public Key getMinKey() {
+    Node minKeyNode = getMinKeyNode(root);
+    return minKeyNode == null ? null : minKeyNode.key;
+  }
 
-        Node curr = node;
-        while (curr != null) {
-            int cmp = key.compareTo(node.key);
-            if (cmp == 0) return node.value;
-            else if(cmp < 0) curr = curr.left;
-            else curr = curr.right;
-        }
-        return null;
+  private Node getMinKeyNode(Node node) {
+    if (node == null) {
+      return null;
+    }
+    Node min = null;
+    while (min.left != null) {
+      min = min.left;
+    }
+    return min;
+  }
+
+  public Key getMaxKey() {
+    Node maxKeyNode = getMaxKeyNode(root);
+    return maxKeyNode == null ? null : maxKeyNode.key;
+  }
+
+  private Node getMaxKeyNode(Node node) {
+    if (node == null) {
+      return null;
     }
 
+    Node max = node;
 
-    public void put(Key key, Value val) { this.root = put(this.root, key, val); }
-
-    public Node put(Node node, Key key, Value value) {
-        if(node == null) return new Node(key, value, 1);
-        int cmp = key.compareTo(node.key);
-
-        if(cmp == 0) node.value = value;
-        else if(cmp < 0) node.left = put(node.left, key, value);
-        else node.right = put(node.right, key, value);
-
-        node.sizeOfSubtree = size(node.left) + size(node.right) + 1;
-        return node;
+    while (max.right != null) {
+      node = node.right;
     }
 
-    /**
-     * @param key
-     * get the floor of key
-     * */
-    public Key floor(Key key) {
-        return null;
+    return node;
+  }
+
+  public void delete(Key key) {
+    this.root = delete(root, key);
+  }
+
+  // delete node with key, return current root
+  public Node delete(Node node, Key key) {
+    if(node == null) { return node; }
+
+    int compare = node.key.compareTo(key);
+
+    if(compare < 0) node.right = delete(node.right, key);
+    else if(compare > 0) node.left = delete(node.left, key);
+    else {
+
+      /*
+      * 1. if left is null, new root is right
+      * 2. if right is null, new root is left
+      * 3. if left and right are not null, new root is smallest number in right subtree
+      * */
+
+      if(node.right == null) return node.left;
+      if(node.left == null) return node.right;
+
+      Node storeNode = node;
+      node = getMinKeyNode(node.right);
+      node.left = storeNode.left;
+      node.right = deleteMinKey(node.right);
     }
 
-    private Node floor(Node node, Key key) {
-        if (node == null) return null;
+    return node;
+  }
 
-        int cmp = key.compareTo(node.key);
+  // delete the smallest Key in tree
+  private Node deleteMinKey(Node node) {
+    if(node == null) return null;
+    if(node.left == null) return node.right;
+    node.left = deleteMinKey(node.left);
+    return node;
+  }
 
-        if(cmp == 0) return node;
-        else if(cmp < 0) return floor(node.left, key);
-        else {
-            Node t = floor(node.right, key);
-            return (t == null) ? node : t;
-        }
+  private void printInOrder() {
+    printInOrder(root);
+  }
+  // in order
+  private void printInOrder(Node node) {
+    if (node == null) {
+      return;
+    } else {
+      printInOrder(node.left);
+      System.out.println("node key: " + node.key + "node value:" + node.value);
+      printInOrder(node.right);
     }
+  }
 
-    // if you want to get the minimum out of tree
-    public void deleteMin() { root = deleteMin(root); }
-
-
-    private Node deleteMin(Node node) {
-        if(node.left == null) return node.right;
-        node.left = deleteMin(node.left);
-        node.sizeOfSubtree = size(node.left) + size(node.right) + 1;
-        return node;
-    }
-
-    public void delete(Key key) { root = delete(root, key); }
-
-    private Node min(Node node) {
-        if(node == null) return null;
-
-        Node pointer = node;
-        while (node.left != null) pointer = pointer.left;
-
-        return pointer;
-    }
+  public static void main(String[] args) {
+    BinarySearchTree<Integer, Integer> bst = new BinarySearchTree();
 
 
-    /**
-     * delete the key in node, and return the replacement node.
-     * */
-    private Node delete(Node node, Key key) {
-        if(node == null) return null;
-
-        int cmp = key.compareTo(node.key);
-
-        if(cmp > 0) node.right = delete(node.right, key);
-        else if(cmp < 0) node.left = delete(node.left, key);
-        else {
-            if(node.right == null) return node.left;
-            if(node.left == null) return node.right;
-            Node storeNode = node;
-
-            /**
-             * if you delete current node, and both its left and right subtree exist,
-             * then the replacement of this will be the minimum node in its right subtree.
-             * */
-            node = min(node.right);
-            node.left = storeNode.left;
-            node.right = deleteMin(storeNode.right);
-        }
-
-        node.sizeOfSubtree = size(node.left) + size(node.right) + 1;
-
-        return node;
-    }
-
-
-
-    public void printTree() { printTree(this.root); }
-
-    // in order
-    private void printTree(Node node) {
-        if (node == null) return;
-        else {
-            printTree(node.left);
-            System.out.println("node key: " + node.key + "node value:" + node.value);
-            printTree(node.right);
-        }
-    }
-
-    public static void main(String[] args) {
-        BinarySearchTree<Integer, Integer> bst = new BinarySearchTree();
         bst.put(2, 2);
         bst.put(1,1);
         bst.put(5,5 );
         bst.put(3, 3);
         bst.put(4, 4);
 
-//        bst.printTree();
-
 //        bst.deleteMin();
 
+       bst.delete(3);
+       bst.delete(6);
+     bst.printInOrder();
 
-
-        bst.delete(3);
-        bst.printTree();
-
-
-
-    }
+  }
 }
